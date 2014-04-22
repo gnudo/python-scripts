@@ -35,6 +35,9 @@ class PasswordGUI(tk.Frame):
         # open ssh access
         self.runAsRoot('/sbin/service sshd start', True)
         
+        # open ssh-service in firewall
+        self.runAsRoot('firewall-cmd --zone=public --add-service=ssh', True)
+        
         # DESTROY window etc.
         self.Destroy() 
         
@@ -47,6 +50,9 @@ class PasswordGUI(tk.Frame):
         
         # close ssh access
         self.runAsRoot('/sbin/service sshd stop', True)
+        
+        # close ssh-service in firewall
+        self.runAsRoot('firewall-cmd --zone=public --remove-service=ssh', True)
         
         # DESTROY window etc.
         self.Destroy() 
@@ -76,6 +82,7 @@ class PasswordGUI(tk.Frame):
         '''
         self.destroy()
         self.parent.destroy()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
