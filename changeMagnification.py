@@ -10,22 +10,22 @@ from epicsMotor import epicsMotor
 
 
 def setNewFocus(foc):
-   print "Moving focus to: "+str(foc)
+   print("Moving focus to: "+str(foc))
    chFocus.move(foc)
    chFocus.wait(poll=1)
 
 def setNewXValue(xvalue):
-   print "Moving X Basestage to: "+str(xvalue)
+   print("Moving X Basestage to: "+str(xvalue))
    chXBaseStage.move(xvalue)
    chXBaseStage.wait(poll=1)
 
 def setNewZValue(zvalue):
-   print "Moving Z Basestage to: "+str(zvalue)
+   print("Moving Z Basestage to: "+str(zvalue))
    chZBaseStage.move(zvalue)
    chZBaseStage.wait(poll=1)
 
 def setFESlitsValues(H_val,V_val):
-   print "Setting Frontend slits values to (H,V): ("+str(H_val)+",",str(V_val)+")"
+   print("Setting Frontend slits values to (H,V): ("+str(H_val)+",",str(V_val)+")")
    chFESlits_H.putw(H_val)
    chFESlits_V.putw(V_val)
 
@@ -34,13 +34,13 @@ def getMagnification():
 
 if __name__ == "__main__":
    if not len(sys.argv) == 2:
-      print ">>>>Error!! Call the script as follows: 'python changeMagnification.py [4x/10x/20x]' "
+      print(">>>>Error!! Call the script as follows: 'python changeMagnification.py [4x/10x/20x]' ")
       exit(1)   
 
    desired_objective = sys.argv[1]
 
    if desired_objective not in ('4x', '10x', '20x'):
-      print ">>>>Error!! Not supported objective: Chooser either 4x, 10x, or 20x"
+      print(">>>>Error!! Not supported objective: Chooser either 4x, 10x, or 20x")
       exit(1)
 
    if desired_objective == '4x':
@@ -58,40 +58,40 @@ if __name__ == "__main__":
    chFocus=epicsMotor('X02DA-ES1-MS1:FOC')
    chToggleLens=epicsPV("X02DA-ES1-MS1:LNS+")
    chMagnification=epicsPV("X02DA-ES1-MS:MAGNF")
-   chLensSelector=epicsPV("X02DA-ES1-MS1:LNSSEL")
+   #chLensSelector=epicsPV("X02DA-ES1-MS1:LNSSEL")
    chXBaseStage=epicsMotor("X02DA-ES1-SMP1:TRX")
    chZBaseStage=epicsMotor("X02DA-ES1-SMP1:TRZ")
    chTomoPanelSampleInPos=epicsPV("X02DA-SCAN-SCN1:SMPIN")
    chFESlits_H=epicsPV("X02DA-FE-SHsize")
    chFESlits_V=epicsPV("X02DA-FE-SVsize")
 
-   foc_4x = 1820
-   foc_10x = 2692
-   foc_20x = 2685.0
-   X_4x = -227
-   X_10x = -114
-   X_20x = 0.0
+   foc_4x = 2261
+   foc_10x = 500
+   foc_20x = 3155
+   X_4x = 0
+   X_10x = 0
+   X_20x = 187
    FE4x_H = 1.484
    FE4x_V = 1.067
    FE10x_H = 0.8
    FE10x_V = 0.5
-   FE20x_H = 0.45
-   FE20x_V = 0.30
-   Z_4x = -21500
-   Z_10x = -21500
-   Z_20x = 8500
+   FE20x_H = 0.65
+   FE20x_V = 0.41
+   Z_4x = -0
+   Z_10x = 0
+   Z_20x = 0
 
    magnificationState = str(getMagnification())
-   print magnificationState
+   print(magnificationState)
 
    if magnificationState == '4.0' and desired_objective == '4x':
-      print "Already at desired magnification - Nothing to do!!!"
+      print("Already at desired magnification - Nothing to do!!!")
       exit(0)
    if magnificationState == '10.0' and desired_objective == '10x':
-      print "Already at desired magnification - Nothing to do!!!"
+      print("Already at desired magnification - Nothing to do!!!")
       exit(0)
    if magnificationState == '20.0' and desired_objective == '20x':
-      print "Already at desired magnification - Nothing to do!!!"
+      print("Already at desired magnification - Nothing to do!!!")
       exit(0)
 
    '''
@@ -100,13 +100,14 @@ if __name__ == "__main__":
    -------------------------------------------------------
    '''
    setNewFocus(0)
+   time.sleep(15)
 
    '''
    -------------------------------------------------------
    (2) Change objective
    -------------------------------------------------------
    '''
-   print "Changing objective ..."
+   print("Changing objective ...")
 
    retries = 0
    while desired_magnification != getMagnification():
@@ -114,7 +115,7 @@ if __name__ == "__main__":
       time.sleep(7)
       retries += 1
       if retries > 4:
-         print ">>>>Error in objective change! State not supported..."
+         print(">>>>Error in objective change! State not supported...")
          exit(1)
 
    '''
@@ -122,7 +123,7 @@ if __name__ == "__main__":
    (3) Set focus in new objective
    -------------------------------------------------------
    '''
-   print "Move focus to the correct value ..."
+   print("Move focus to the correct value ...")
    while True:
       magnificationState = str(chMagnification.getw())
       if magnificationState == '4.0' and desired_objective == '4x':
@@ -176,4 +177,4 @@ if __name__ == "__main__":
       setFESlitsValues(FE20x_H,FE20x_V)  
 
 
-   print "DONE: Changed magnification successfully!"
+   print("DONE: Changed magnification successfully!")
