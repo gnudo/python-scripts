@@ -13,6 +13,7 @@ def setNewFocus(foc):
    print("Moving focus to: "+str(foc))
    chFocus.move(foc)
    chFocus.wait(poll=1)
+   time.sleep(20)
 
 def setNewXValue(xvalue):
    print("Moving X Basestage to: "+str(xvalue))
@@ -76,7 +77,7 @@ if __name__ == "__main__":
    FE10x_H = 0.8
    FE10x_V = 0.5
    FE20x_H = 0.65
-   FE20x_V = 0.41
+   FE20x_V = 0.46
    Z_4x = -0
    Z_10x = 0
    Z_20x = 0
@@ -100,7 +101,6 @@ if __name__ == "__main__":
    -------------------------------------------------------
    '''
    setNewFocus(0)
-   time.sleep(15)
 
    '''
    -------------------------------------------------------
