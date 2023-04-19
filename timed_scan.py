@@ -33,3 +33,4 @@ if __name__ == "__main__":
 
       # WAIT
       time.sleep(timing)
+      time.sleep(timing)
